@@ -1,29 +1,34 @@
 # Use Python 3.11 as the base image
 FROM python:3.11-slim
 
-# Set the working directory in the container
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Install system dependencies and build tools
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libsqlite3-dev \
+# Install system dependencies first
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    gcc \
     python3-dev \
+    libsqlite3-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Create and activate virtual environment
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt .
 
-# Upgrade pip with verbose output
-RUN python -m pip install --upgrade pip --verbose
+# Upgrade pip and install requirements with detailed logging
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt 2>&1 | tee pip_install.log
 
-# Install Python dependencies with verbose output
-RUN python -m pip install --no-cache-dir -r requirements.txt --verbose
+# Copy the rest of the application
+COPY . .
 
-# Run the application
+# Command to run the application
 CMD ["python", "model.py"]
+
 
