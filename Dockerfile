@@ -18,12 +18,15 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first to leverage Docker cache
+# Copy requirements file
 COPY requirements.txt .
 
-# Upgrade pip and install requirements with verbose output
+# Upgrade pip and install each requirement separately with verbose output
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt --verbose
+    pip install pyTelegramBotAPI==4.12.0 --verbose && \
+    pip install huggingface_hub==0.27.0 --verbose && \
+    pip install Pillow==9.5.0 --verbose && \
+    pip install python-dotenv==1.0.0 --verbose
 
 # Copy the rest of the application
 COPY . .
