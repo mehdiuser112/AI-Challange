@@ -4,12 +4,12 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=off
 
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies first
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc \
@@ -21,14 +21,13 @@ RUN apt-get update && \
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
-# Upgrade pip and install requirements with detailed logging
+# Upgrade pip and install requirements with verbose output
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt 2>&1 | tee pip_install.log
+    pip install -r requirements.txt --verbose
 
 # Copy the rest of the application
 COPY . .
 
 # Command to run the application
 CMD ["python", "model.py"]
-
 
