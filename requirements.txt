@@ -1,0 +1,5 @@
+telebot
+huggingface_hub
+Pillow
+python-dotenv
+sqlite3
