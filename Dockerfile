@@ -1,5 +1,5 @@
-# Use Python 3.11 as the base image
-FROM python:3.11-slim-buster
+# Use Python 3.11.5 as the base image
+FROM python:3.11.5-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
@@ -11,6 +11,9 @@ COPY . /app
 RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
