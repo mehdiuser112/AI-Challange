@@ -1,5 +1,5 @@
-# Use Python 3.11.5 as the base image
-FROM python:3.11.5-slim-buster
+# Use Python 3.11 as the base image (using a more generic tag)
+FROM python:3.11-slim
 
 # Set the working directory in the container
 WORKDIR /app
