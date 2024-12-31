@@ -1,9 +1,9 @@
-import os
-import telebot
+from telebot import TeleBot
 from huggingface_hub import InferenceClient
 from PIL import Image
 import sqlite3
 from dotenv import load_dotenv
+import os
 
 # Load environment variables
 load_dotenv()
@@ -17,7 +17,7 @@ MODEL_NAME = "stabilityai/stable-diffusion-3.5-large"
 client = InferenceClient(token=HUGGINGFACE_API_TOKEN)
 
 # Initialize Telegram Bot
-bot = telebot.TeleBot(BOT_TOKEN)
+bot = TeleBot(BOT_TOKEN)
 
 # Initialize SQLite database
 def init_db():
@@ -63,7 +63,7 @@ def send_welcome(message):
     user_id = message.chat.id
     bot.send_message(
         message.chat.id,
-        """🌟 *Welcome to the AI Image Creator Bot!* 🎨\n\nHi there! I'm here to bring your imagination to life with stunning AI-generated images. Just tell me what you’d like to see, and I’ll create it for you in seconds using the power of Stable Diffusion.\n\n✨ *Commands You Can Use:*\n- */gallery* - Browse your personal gallery of previously generated images. 🖼️\n- *Custom Image Generation* - Want something unique? Use this format:\n  `<prompt>;<resolution>;<style>`\n  Example: _"A breathtaking mountain sunset;1024x1024;oil painting style"_\n\nReady to create something amazing? 🚀 Let’s get started! 🎉""",
+        """🌟 *Welcome to the AI Image Creator Bot!* 🎨\n\nHi there! I'm here to bring your imagination to life with stunning AI-generated images. Just tell me what you'd like to see, and I'll create it for you in seconds using the power of Stable Diffusion.\n\n✨ *Commands You Can Use:*\n- */gallery* - Browse your personal gallery of previously generated images. 🖼️\n- *Custom Image Generation* - Want something unique? Use this format:\n  `<prompt>;<resolution>;<style>`\n  Example: _"A breathtaking mountain sunset;1024x1024;oil painting style"_\n\nReady to create something amazing? 🚀 Let's get started! 🎉""",
         parse_mode="Markdown",
     )
 
@@ -111,3 +111,4 @@ if __name__ == "__main__":
     print("Bot is running...")
     init_db()
     bot.polling()
+
