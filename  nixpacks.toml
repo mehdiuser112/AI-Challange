@@ -1,0 +1,6 @@
+[phases.setup]
+run = "pip install -r requirements.txt"
+
+[phases]
+build = { cmd = "python -m venv venv && source venv/bin/activate" }
+
