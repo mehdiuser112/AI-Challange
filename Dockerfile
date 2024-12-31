@@ -1,22 +1,20 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11.5-slim
+# Use Python 3.11 as the base image
+FROM python:3.11-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container
-COPY . .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install dependencies
-RUN python -m venv /opt/venv && \
-    /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Make sure the virtual environment is the default Python
-ENV PATH="/opt/venv/bin:$PATH"
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port (if your bot needs it, otherwise remove this line)
-EXPOSE 5000
-
-# Define the command to run the bot
+# Run the application
 CMD ["python", "model.py"]
+
